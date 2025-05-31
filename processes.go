@@ -1,3 +1,4 @@
+package main
 func ScanProcesses() []string {
     var results []string
     entries, _ := ioutil.ReadDir("/proc")
