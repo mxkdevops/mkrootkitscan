@@ -1,3 +1,13 @@
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+// You must declare the ScanResult type and the functions used here,
+// or import them if they are in separate files (e.g., processes.go, ports.go, etc.)
+
 func main() {
     results := ScanResult{
         Processes: ScanProcesses(),
