@@ -26,7 +26,7 @@ type ScanResult struct {
 }
 
 func ScanProcesses() []string {
-    var results []string
+    results := make([]string, 0) // initialize empty slice
     entries, _ := ioutil.ReadDir("/proc")
     for _, entry := range entries {
         if pid, err := strconv.Atoi(entry.Name()); err == nil {
@@ -54,9 +54,9 @@ func parseHexIPPort(hexStr string) string {
 }
 
 func ScanPorts() []string {
+    results := make([]string, 0) // initialize empty slice
     tcp, _ := ioutil.ReadFile("/proc/net/tcp")
     lines := strings.Split(string(tcp), "\n")[1:]
-    var results []string
     for _, line := range lines {
         if strings.TrimSpace(line) == "" {
             continue
@@ -72,9 +72,9 @@ func ScanPorts() []string {
 }
 
 func ScanModules() []string {
+    results := make([]string, 0) // initialize empty slice
     data, _ := ioutil.ReadFile("/proc/modules")
     lines := strings.Split(string(data), "\n")
-    var results []string
     for _, line := range lines {
         if strings.Contains(line, "rootkit") {
             results = append(results, "⚠️ Suspicious Module: "+line)
@@ -92,8 +92,8 @@ func ScanLDPreload() string {
 }
 
 func ScanHiddenFiles() []string {
+    results := make([]string, 0) // initialize empty slice
     files, _ := ioutil.ReadDir("/")
-    var results []string
     for _, f := range files {
         if strings.HasPrefix(f.Name(), ".") {
             results = append(results, "🔒 Hidden File/Dir: /"+f.Name())
@@ -103,8 +103,8 @@ func ScanHiddenFiles() []string {
 }
 
 func ScanCriticalFileHashes() []string {
+    results := make([]string, 0) // initialize empty slice
     paths := []string{"/bin/ls", "/bin/ps", "/usr/bin/top"}
-    var results []string
     for _, path := range paths {
         content, err := ioutil.ReadFile(path)
         if err == nil {
@@ -139,7 +139,9 @@ func GenerateReport(results ScanResult, format string) {
         for _, m := range results.Modules {
             f.WriteString("<li>" + m + "</li>")
         }
-        f.WriteString("<li>" + results.Preload + "</li>")
+        if results.Preload != "" {
+            f.WriteString("<li>" + results.Preload + "</li>")
+        }
         for _, h := range results.Hidden {
             f.WriteString("<li>" + h + "</li>")
         }
