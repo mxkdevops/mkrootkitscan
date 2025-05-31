@@ -1,3 +1,5 @@
+package main
+
 func ScanPorts() []string {
     tcp, _ := ioutil.ReadFile("/proc/net/tcp")
     return parseNetStat("tcp", tcp)
