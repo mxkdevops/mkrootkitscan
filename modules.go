@@ -1,3 +1,4 @@
+package main
 func ScanModules() []string {
     data, _ := ioutil.ReadFile("/proc/modules")
     lines := strings.Split(string(data), "\n")
