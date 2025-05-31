@@ -1,3 +1,5 @@
+package main
+
 type ScanResult struct {
     Processes []string `json:"processes"`
     Ports     []string `json:"ports"`
