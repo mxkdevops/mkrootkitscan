@@ -14,6 +14,18 @@ Verifies critical binary hashes (ls, ps, top)
 
 Outputs reports in text, json, or html formats
 
+mkrootkitscan/
+├── main.go
+├── scanner/
+│   ├── processes.go
+│   ├── ports.go
+│   ├── modules.go
+│   ├── preload.go
+│   ├── files.go
+│   └── report.go
+└── go.mod
+
+
 ## 🔧 Installation
 
 1. Install Go (if not installed)
