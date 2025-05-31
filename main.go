@@ -122,55 +122,80 @@ func md5sum(data []byte) []byte {
 }
 
 func GenerateReport(results ScanResult, format string) {
-    switch format {
-    case "json":
-        b, _ := json.MarshalIndent(results, "", "  ")
-        ioutil.WriteFile("scan_report.json", b, 0644)
-    case "html":
-        f, _ := os.Create("scan_report.html")
-        defer f.Close()
-        f.WriteString("<html><body><h1>mkrootkitscan Report</h1><ul>")
-        for _, p := range results.Processes {
-            f.WriteString("<li>" + p + "</li>")
-        }
-        for _, p := range results.Ports {
-            f.WriteString("<li>" + p + "</li>")
-        }
-        for _, m := range results.Modules {
-            f.WriteString("<li>" + m + "</li>")
-        }
-        if results.Preload != "" {
-            f.WriteString("<li>" + results.Preload + "</li>")
-        }
-        for _, h := range results.Hidden {
-            f.WriteString("<li>" + h + "</li>")
-        }
-        for _, h := range results.Hashes {
-            f.WriteString("<li>" + h + "</li>")
-        }
-        f.WriteString("</ul></body></html>")
-    default:
-        fmt.Println("[Text Output]")
-        for _, l := range results.Processes {
-            fmt.Println(l)
-        }
-        for _, l := range results.Ports {
-            fmt.Println(l)
-        }
-        for _, l := range results.Modules {
-            fmt.Println(l)
-        }
-        if results.Preload != "" {
-            fmt.Println(results.Preload)
-        }
-        for _, l := range results.Hidden {
-            fmt.Println(l)
-        }
-        for _, l := range results.Hashes {
-            fmt.Println(l)
-        }
-    }
+	switch format {
+	case "json":
+		b, _ := json.MarshalIndent(results, "", "  ")
+		ioutil.WriteFile("scan_report.json", b, 0644)
+	case "html":
+		f, _ := os.Create("scan_report.html")
+		defer f.Close()
+
+		style := `
+		<style>
+		body { font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px; }
+		h1 { color: #343a40; }
+		ul { list-style-type: none; padding: 0; }
+		li { margin: 8px 0; padding: 10px; border-radius: 6px; }
+		li.warning { background-color: #ffeeba; border-left: 5px solid #ffc107; }
+		li.info { background-color: #e2e3e5; border-left: 5px solid #6c757d; }
+		li.good { background-color: #d4edda; border-left: 5px solid #28a745; }
+		footer { margin-top: 30px; font-style: italic; color: #666; }
+		</style>
+		`
+
+		f.WriteString("<html><head><title>mkrootkitscan Report</title>" + style + "</head><body>")
+		f.WriteString("<h1>mkrootkitscan Report</h1><ul>")
+
+		writeSection := func(title string, items []string) {
+			if len(items) == 0 {
+				return
+			}
+			f.WriteString(fmt.Sprintf("<h2>%s</h2>", title))
+			for _, item := range items {
+				class := "info"
+				if strings.Contains(item, "⚠️") {
+					class = "warning"
+				} else if strings.Contains(item, "🔌") || strings.Contains(item, "📁") {
+					class = "good"
+				}
+				f.WriteString(fmt.Sprintf("<li class='%s'>%s</li>", class, item))
+			}
+		}
+
+		writeSection("Suspicious Processes", results.Processes)
+		writeSection("Open Ports", results.Ports)
+		writeSection("Kernel Modules", results.Modules)
+		if results.Preload != "" {
+			f.WriteString(fmt.Sprintf("<li class='warning'>%s</li>", results.Preload))
+		}
+		writeSection("Hidden Files", results.Hidden)
+		writeSection("Binary Hashes", results.Hashes)
+
+		f.WriteString(fmt.Sprintf("<footer><p>Scan Time: %s</p></footer>", results.Timestamp))
+		f.WriteString("</body></html>")
+	default:
+		fmt.Println("[Text Output]")
+		for _, l := range results.Processes {
+			fmt.Println(l)
+		}
+		for _, l := range results.Ports {
+			fmt.Println(l)
+		}
+		for _, l := range results.Modules {
+			fmt.Println(l)
+		}
+		if results.Preload != "" {
+			fmt.Println(results.Preload)
+		}
+		for _, l := range results.Hidden {
+			fmt.Println(l)
+		}
+		for _, l := range results.Hashes {
+			fmt.Println(l)
+		}
+	}
 }
+
 
 func main() {
     outputFormat := flag.String("format", "text", "Output format: text, html, or json")
