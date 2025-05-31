@@ -1,3 +1,4 @@
+package main
 func ScanHiddenFiles() []string {
     files, _ := ioutil.ReadDir("/")
     var results []string
