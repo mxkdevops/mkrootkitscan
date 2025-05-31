@@ -1,9 +1,8 @@
-
-mkrootkitscan
+## mkrootkitscan
 
 A fast, CLI-based rootkit and anomaly scanner for Linux systems. Written in Go for speed and portability.
 
-🚀 Features
+## 🚀 Features
 
 Scans for suspicious processes, ports, and modules
 
@@ -15,7 +14,7 @@ Verifies critical binary hashes (ls, ps, top)
 
 Outputs reports in text, json, or html formats
 
-🔧 Installation
+## 🔧 Installation
 
 1. Install Go (if not installed)
 
@@ -33,20 +32,20 @@ go build -o mkrootkitscan main.go
 ▶️ Usage
 
 Run a scan and generate report:
-
+```bash
 sudo ./mkrootkitscan --format=html       # Save as scan_report.html
 sudo ./mkrootkitscan --format=json       # Save as scan_report.json
 sudo ./mkrootkitscan --format=text       # Console output
 sudo ./mkrootkitscan --format=html --quiet  # No console output
-
+```
 📁 Output Files
-
+```bash
 scan_report.json — JSON report
 
 scan_report.html — User-friendly HTML report
 
 scan_report.txt  — (optional, if added)
-
+```
 📸 Screenshots
 
 HTML Output Preview:
@@ -54,7 +53,7 @@ HTML Output Preview:
 
 
 JSON Output:
-
+```bash
 {
   "Processes": ["⚠️ Suspicious Process 101: /usr/sbin/apache2"],
   "Ports": ["🔌 Open Port: 0.0.0.0:22"],
@@ -64,7 +63,7 @@ JSON Output:
   "Hashes": ["📁 /bin/ls MD5: 1a79a4d60de6718e8e5b326e338ae533"],
   "Timestamp": "2025-05-31T12:34:56Z"
 }
-
+```
 📌 Roadmap (To-Do)
 
 
@@ -76,4 +75,5 @@ MIT
 🙋‍♂️ Author
 
 [Your Name]  |  yourwebsite.com  |  GitHub: @yourusername
+
 
