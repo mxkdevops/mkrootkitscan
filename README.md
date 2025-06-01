@@ -34,7 +34,7 @@ sudo apt update && sudo apt install golang -y
 
 2. Clone the Repo
 
-git clone https://github.com/yourusername/mkrootkitscan.git
+git clone https://github.com/mxkdevops/mkrootkitscan.git
 cd mkrootkitscan
 
 3. Build the Scanner
